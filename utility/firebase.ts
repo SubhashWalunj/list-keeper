@@ -13,12 +13,9 @@ const firebaseConfig = {
   measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-export function useFirebase() {
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-  // Initialize Cloud Firestore and get a reference to the service
-  const db = getFirestore(app);
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
 
-  return db;
-}
+export default db;
