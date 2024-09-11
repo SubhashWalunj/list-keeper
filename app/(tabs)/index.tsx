@@ -7,6 +7,7 @@ import { ThemedView } from "@/components/ThemedView";
 import ListCurrent from "@/features/list-current/list-current";
 import ItemAdd from "@/features/item-add/item-add";
 import { useCallback } from "react";
+import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
   const handleItemAddSuccess = useCallback(() => {
@@ -24,7 +25,10 @@ export default function HomeScreen() {
   return (
     <>
       <ParallaxScrollView
-        headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+        headerBackgroundColor={{
+          light: Colors.light.primary,
+          dark: Colors.dark.primary,
+        }}
       >
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="title">Hello Shopper!</ThemedText>

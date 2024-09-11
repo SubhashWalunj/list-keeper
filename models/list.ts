@@ -1,7 +1,7 @@
 type List = {
   fulfilled: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   lastUpdateBy: string;
   items: Item[];
 };

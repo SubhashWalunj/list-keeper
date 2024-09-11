@@ -2,18 +2,22 @@ import { ListKeys } from "@/constants/Query";
 import List from "@/models/list";
 import db from "@/utility/firebase";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 async function fetchCurrentList(): Promise<List | null> {
-  const querySnapshot = await getDocs(collection(db, "currentList"));
-  let currentList: List | null = null;
-  querySnapshot.forEach((doc) => {
-    currentList = doc.data() as List;
-  });
+  try {
+    const querySnapshot = await getDoc(doc(db, "Lists", "current"));
+    const currentList = querySnapshot.data() as List;
+    if (currentList.items) {
+      return currentList;
+    }
+    return null;
+  } catch (e) {
+    console.log("error", e);
+  }
+  return null;
 
-  console.log(currentList);
-
-  return {
+  /* return {
     createdAt: new Date().toDateString(),
     fulfilled: true,
     items: [
@@ -44,7 +48,7 @@ async function fetchCurrentList(): Promise<List | null> {
     ],
     updatedAt: new Date().toDateString(),
     lastUpdateBy: "xyz",
-  };
+  }; */
 }
 
 const useCurrentListData = () =>

@@ -24,37 +24,36 @@ function ItemAdd({ onSuccess, onError, onPending }: ItemAddProps) {
 
   const handleItemAdd = useCallback((item: Item) => {
     mutate(item);
+    setModalOpen(false);
   }, []);
   const toast = useToast();
-  const [toastId, setToastId] = useState(Date.now().toString());
+
+  const showToast = useCallback(
+    (action: "success" | "error", message: string) => {
+      toast.show({
+        id: Date.now().toString(),
+        placement: "top",
+        duration: 3000,
+        render: ({ id }) => {
+          const uniqueToastId = "toast-" + id;
+          return (
+            <Toast nativeID={uniqueToastId} action={action} variant="solid">
+              <ToastTitle>{message}</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isPending) {
       if (isSuccess) {
-        onSuccess();
+        showToast("success", "Item Added :)");
       } else if (isError) {
-        onError();
+        showToast("error", "Error occurred (-_-)");
       } else {
-        if (!toast.isActive(toastId)) {
-          const newId = Date.now().toString();
-          setToastId(newId);
-          toast.show({
-            id: newId,
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => {
-              const uniqueToastId = "toast-" + id;
-              return (
-                <Toast nativeID={uniqueToastId} action="error" variant="solid">
-                  <ToastTitle>Error</ToastTitle>
-                  <ToastDescription>
-                    Failed to add new item to the list. Please try again.
-                  </ToastDescription>
-                </Toast>
-              );
-            },
-          });
-        }
       }
     }
     onPending(isPending);

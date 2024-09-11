@@ -1,11 +1,25 @@
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { FileCheck2 } from "lucide-react-native";
-import { StyleSheet } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { FileCheck2, FileX2 } from "lucide-react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 
-function ItemCheck() {
+type ItemCheckProps = {
+  isChecked: boolean;
+  onToggle: (checked: boolean) => void;
+};
+
+function ItemCheck({ isChecked }: ItemCheckProps) {
+  let checkButtonStyles = styles.checkButton;
+  const theme = useColorScheme() || "light";
+  /* if (isChecked) {
+    checkButtonStyles = {
+      ...checkButtonStyles,
+      backgroundColor: Colors[theme].primary,
+    };
+  } */
   return (
-    <Button size="lg" style={styles.checkButton} className="rounded-full p-3.5">
-      <ButtonIcon stroke="black" as={FileCheck2} />
+    <Button size="lg" style={checkButtonStyles} className="rounded-full p-3.5">
+      <ButtonIcon stroke="black" as={isChecked ? FileX2 : FileCheck2} />
     </Button>
   );
 }

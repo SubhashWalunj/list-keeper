@@ -14,6 +14,7 @@ import {
 import { Divider } from "@/components/ui/divider";
 import ItemEditorForm from "../item-editor-form/item-editor-form";
 import type { ListTypes } from "@/models/list";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 
 type EditType = "NEW" | "UPDATE";
 
@@ -34,13 +35,27 @@ function ItemAddModal({
 }: ItemAddModalProps) {
   const [isFormInvalid, setIsFormInvalid] = useState(true);
   const [newItem, setNewItem] = useState<Item>();
+  const toast = useToast();
 
-  const handleItemAdd = useCallback(() => {
+  const handleItemAdd = () => {
     if (newItem) {
       addItem(newItem);
+      return;
     }
-    // TODO: show error
-  }, []);
+    toast.show({
+      id: Date.now().toString(),
+      placement: "top",
+      duration: 3000,
+      render: ({ id }) => {
+        const uniqueToastId = "toast-" + id;
+        return (
+          <Toast nativeID={uniqueToastId} action="warning" variant="solid">
+            <ToastTitle>Please fill up the form.</ToastTitle>
+          </Toast>
+        );
+      },
+    });
+  };
 
   const formValues: Item = useMemo(() => {
     if (editType === "NEW") {
