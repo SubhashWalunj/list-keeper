@@ -6,16 +6,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { doc, updateDoc } from "firebase/firestore";
 import { produce } from "immer";
 
-async function toggleItemCheck(data: Item[]) {
+async function updateFirebase(data: Item[]) {
   await updateDoc(doc(db, "Lists", "current"), {
     items: data,
   });
 }
 
-function getUpdatedItems(items: Item[], item: Item) {
+function removeItem(items: Item[], item: Item) {
   return produce(items, (draft) => {
     const index = draft.findIndex((i) => i.name === item.name);
-    draft[index] = item;
+    if (index !== -1) {
+      draft.splice(index, 1);
+    }
   });
 }
 
@@ -25,8 +27,8 @@ const useItemRemoveMutation = () => {
   return useMutation({
     mutationFn: (item: Item) => {
       const previousList: List = queryClient.getQueryData(key)!;
-      const itemsToUpdate = getUpdatedItems(previousList.items, item);
-      return toggleItemCheck(itemsToUpdate);
+      const itemsToUpdate = removeItem(previousList.items, item);
+      return updateFirebase(itemsToUpdate);
     },
     // When mutate is called:
     onMutate: async (item) => {
@@ -38,7 +40,7 @@ const useItemRemoveMutation = () => {
       const previousList: List = queryClient.getQueryData(key)!;
 
       // Get items in updated state
-      const itemsToUpdate = getUpdatedItems(previousList.items, item);
+      const itemsToUpdate = removeItem(previousList.items, item);
 
       // Optimistically update to the new value
       queryClient.setQueryData(key, (old: List) => ({

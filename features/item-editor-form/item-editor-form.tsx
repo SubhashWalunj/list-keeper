@@ -64,25 +64,22 @@ function ItemEditorForm({ values, onInputChange }: ItemEditorProps) {
     },
   });
 
-  const handleInputChange = useCallback(
-    <T extends keyof ItemEditorFormType>(
-      key: T,
-      input: ItemEditorFormType[T]
-    ) => {
-      const formValues: Item = {
-        name: form.name.value,
-        quantity: form.quantity.value,
-        unit: form.unit.value,
-      };
-      setForm(
-        produce((draft) => {
-          draft[key] = input;
-        })
-      );
-      onInputChange({ ...formValues, [key]: input.value });
-    },
-    [form, onInputChange]
-  );
+  const handleInputChange = <T extends keyof ItemEditorFormType>(
+    key: T,
+    input: ItemEditorFormType[T]
+  ) => {
+    const formValues: Item = {
+      name: form.name.value,
+      quantity: form.quantity.value,
+      unit: form.unit.value,
+    };
+    setForm(
+      produce((draft) => {
+        draft[key] = input;
+      })
+    );
+    onInputChange({ ...formValues, [key]: input.value });
+  };
 
   return (
     <>

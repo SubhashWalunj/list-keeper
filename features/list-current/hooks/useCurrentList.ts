@@ -16,39 +16,6 @@ async function fetchCurrentList(): Promise<List | null> {
     console.log("error", e);
   }
   return null;
-
-  /* return {
-    createdAt: new Date().toDateString(),
-    fulfilled: true,
-    items: [
-      {
-        createdAt: new Date().toDateString(),
-        createdBy: "abc",
-        lastUpdatedBy: "xyz",
-        moved: false,
-        name: "Sugar",
-        purchased: false,
-        quantity: 1,
-        removed: false,
-        unit: "abc",
-        updatedAt: new Date().toDateString(),
-      },
-      {
-        createdAt: new Date().toDateString(),
-        createdBy: "abc",
-        lastUpdatedBy: "xyz",
-        moved: false,
-        name: "Coffee",
-        purchased: false,
-        quantity: 1,
-        removed: false,
-        unit: "abc",
-        updatedAt: new Date().toDateString(),
-      },
-    ],
-    updatedAt: new Date().toDateString(),
-    lastUpdateBy: "xyz",
-  }; */
 }
 
 const useCurrentListData = () =>

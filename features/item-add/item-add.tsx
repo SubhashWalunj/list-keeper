@@ -6,13 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ItemAddModal from "../item-editor-modal/item-editor-modal";
 import useItemAddMutation from "./hooks/useItemAddMutation";
 
-type ItemAddProps = {
-  onSuccess: () => void;
-  onError: () => void;
-  onPending: (isPending: boolean) => void;
-};
-
-function ItemAdd({ onPending }: ItemAddProps) {
+function ItemAdd() {
   const [modalOpen, setModalOpen] = useState(false);
   const ref = useRef(null);
   const { mutate, isSuccess, isPending, isError } =
@@ -36,7 +30,8 @@ function ItemAdd({ onPending }: ItemAddProps) {
       } else {
       }
     }
-  }, [isPending, isSuccess, isError, showToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPending]);
 
   return (
     <>

@@ -6,22 +6,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import ListCurrent from "@/features/list-current/list-current";
 import ItemAdd from "@/features/item-add/item-add";
-import { useCallback } from "react";
 import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
-  const handleItemAddSuccess = useCallback(() => {
-    console.log("Success");
-  }, []);
-
-  const handleItemAddError = useCallback(() => {
-    console.log("Error");
-  }, []);
-
-  const handleItemAddPending = useCallback((isPending: boolean) => {
-    console.log("Pending", isPending);
-  }, []);
-
   return (
     <>
       <ParallaxScrollView
@@ -38,11 +25,7 @@ export default function HomeScreen() {
           <ListCurrent></ListCurrent>
         </ThemedView>
       </ParallaxScrollView>
-      <ItemAdd
-        onPending={(isPending) => handleItemAddPending(isPending)}
-        onSuccess={handleItemAddSuccess}
-        onError={handleItemAddError}
-      ></ItemAdd>
+      <ItemAdd></ItemAdd>
     </>
   );
 }

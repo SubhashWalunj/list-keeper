@@ -31,7 +31,7 @@ function ListCurrent() {
     return <ThemedText>An Error occurred to fetch the current list</ThemedText>;
   }
 
-  return data ? (
+  return data && data.items.length ? (
     sortItems(data.items).map((item, index) => (
       <React.Fragment key={index}>
         <Card
@@ -64,7 +64,7 @@ function ListCurrent() {
                 </BadgeText>
               </Badge>
             )}
-            <ItemActions></ItemActions>
+            <ItemActions item={item}></ItemActions>
           </View>
         </Card>
       </React.Fragment>
