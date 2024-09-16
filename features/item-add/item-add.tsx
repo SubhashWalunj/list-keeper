@@ -1,14 +1,10 @@
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
+import useShowToast from "@/hooks/useShowToast";
+import Item from "@/models/item";
 import { ListPlus } from "lucide-react-native";
-import ItemAddModal from "../item-editor-modal/item-editor-modal";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ItemAddModal from "../item-editor-modal/item-editor-modal";
 import useItemAddMutation from "./hooks/useItemAddMutation";
-import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  useToast,
-} from "@/components/ui/toast";
 
 type ItemAddProps = {
   onSuccess: () => void;
@@ -16,48 +12,31 @@ type ItemAddProps = {
   onPending: (isPending: boolean) => void;
 };
 
-function ItemAdd({ onSuccess, onError, onPending }: ItemAddProps) {
+function ItemAdd({ onPending }: ItemAddProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const ref = useRef(null);
   const { mutate, isSuccess, isPending, isError } =
     useItemAddMutation("CURRENT");
 
-  const handleItemAdd = useCallback((item: Item) => {
-    mutate(item);
-    setModalOpen(false);
-  }, []);
-  const toast = useToast();
-
-  const showToast = useCallback(
-    (action: "success" | "error", message: string) => {
-      toast.show({
-        id: Date.now().toString(),
-        placement: "top",
-        duration: 3000,
-        render: ({ id }) => {
-          const uniqueToastId = "toast-" + id;
-          return (
-            <Toast nativeID={uniqueToastId} action={action} variant="solid">
-              <ToastTitle>{message}</ToastTitle>
-            </Toast>
-          );
-        },
-      });
+  const handleItemAdd = useCallback(
+    (item: Item) => {
+      mutate(item);
+      setModalOpen(false);
     },
-    []
+    [mutate]
   );
+  const showToast = useShowToast();
 
   useEffect(() => {
     if (!isPending) {
       if (isSuccess) {
-        showToast("success", "Item Added :)");
+        showToast("item-add-success", "success", "Item Added :)");
       } else if (isError) {
-        showToast("error", "Error occurred (-_-)");
+        showToast("item-add-error", "error", "Error occurred (-_-)");
       } else {
       }
     }
-    onPending(isPending);
-  }, [isPending]);
+  }, [isPending, isSuccess, isError, showToast]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Button, ButtonIcon } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 import { ArrowBigRightDash, Ellipsis, ListX } from "lucide-react-native";
@@ -10,7 +10,7 @@ function ItemActions() {
       offset={5}
       trigger={({ ...triggerProps }) => {
         return (
-          <Button {...triggerProps}>
+          <Button {...triggerProps} variant="solid">
             <ButtonIcon stroke="white" as={Ellipsis}></ButtonIcon>
           </Button>
         );

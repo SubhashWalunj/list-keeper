@@ -20,6 +20,7 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
+import Item from "@/models/item";
 import { produce } from "immer";
 import { AlertCircleIcon, ChevronDownIcon } from "lucide-react-native";
 import { useCallback, useState } from "react";
@@ -37,7 +38,7 @@ type FormInput<T> = {
   isDirty: boolean;
 };
 
-type ItemEditorForm = {
+type ItemEditorFormType = {
   name: FormInput<string>;
   quantity: FormInput<number>;
   unit: FormInput<QuantityUnits>;
@@ -45,7 +46,7 @@ type ItemEditorForm = {
 
 function ItemEditorForm({ values, onInputChange }: ItemEditorProps) {
   const [showQuantity, setShowQuantity] = useState(false);
-  const [form, setForm] = useState<ItemEditorForm>({
+  const [form, setForm] = useState<ItemEditorFormType>({
     name: {
       value: values.name,
       isInvalid: true,
@@ -64,7 +65,10 @@ function ItemEditorForm({ values, onInputChange }: ItemEditorProps) {
   });
 
   const handleInputChange = useCallback(
-    <T extends keyof ItemEditorForm>(key: T, input: ItemEditorForm[T]) => {
+    <T extends keyof ItemEditorFormType>(
+      key: T,
+      input: ItemEditorFormType[T]
+    ) => {
       const formValues: Item = {
         name: form.name.value,
         quantity: form.quantity.value,
@@ -77,7 +81,7 @@ function ItemEditorForm({ values, onInputChange }: ItemEditorProps) {
       );
       onInputChange({ ...formValues, [key]: input.value });
     },
-    []
+    [form, onInputChange]
   );
 
   return (

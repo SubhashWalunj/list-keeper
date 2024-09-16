@@ -1,13 +1,14 @@
 import { ThemedText } from "@/components/ThemedText";
-import { Card } from "@/components/ui/card";
-import React, { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
-import ItemCheck from "../item-check/item-check";
-import ItemActions from "../item-actions/item-actions";
-import useCurrentListData from "./hooks/useCurrentList";
 import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react-native";
 import { Badge, BadgeText } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import Item from "@/models/item";
+import { InfoIcon } from "lucide-react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import ItemActions from "../item-actions/item-actions";
+import ItemCheck from "../item-check/item-check";
+import useCurrentListData from "./hooks/useCurrentList";
 
 const sortItems = (items: Item[]) =>
   items.sort((a, b) => {
@@ -25,8 +26,6 @@ const sortItems = (items: Item[]) =>
 function ListCurrent() {
   const { error, data } = useCurrentListData();
 
-  const handleItemCheck = useCallback(() => {}, []);
-
   if (error) {
     console.log(error);
     return <ThemedText>An Error occurred to fetch the current list</ThemedText>;
@@ -42,10 +41,7 @@ function ListCurrent() {
           style={item.purchased && { backgroundColor: "#208b3a" }}
         >
           <View style={styles.itemContainer}>
-            <ItemCheck
-              isChecked={Boolean(item.purchased)}
-              onToggle={handleItemCheck}
-            ></ItemCheck>
+            <ItemCheck item={item}></ItemCheck>
             <ThemedText
               style={{
                 fontWeight: "bold",

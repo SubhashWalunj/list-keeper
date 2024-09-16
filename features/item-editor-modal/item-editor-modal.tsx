@@ -15,6 +15,7 @@ import { Divider } from "@/components/ui/divider";
 import ItemEditorForm from "../item-editor-form/item-editor-form";
 import type { ListTypes } from "@/models/list";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import Item from "@/models/item";
 
 type EditType = "NEW" | "UPDATE";
 
@@ -70,7 +71,7 @@ function ItemAddModal({
       quantity: 1,
       unit: "numbers",
     };
-  }, []);
+  }, [editType]);
 
   const handleInputChange = useCallback((formValues: Item) => {
     setIsFormInvalid(!Boolean(formValues.name));

@@ -1,5 +1,5 @@
 type Item = {
-  createdAt?: string;
+  createdAt?: number;
   createdBy?: string;
   lastUpdatedBy?: string;
   moved?: boolean;
@@ -8,5 +8,7 @@ type Item = {
   quantity: number;
   removed?: boolean;
   unit: string;
-  updatedAt?: string;
+  updatedAt?: number;
 };
+
+export default Item;

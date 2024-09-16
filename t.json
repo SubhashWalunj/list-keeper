@@ -1,25 +1,56 @@
 {
-  "_converter": null,
-  "_document": {
-    "createTime": { "timestamp": ["Timestamp"] },
-    "data": { "value": ["Object"] },
-    "documentState": 0,
-    "documentType": 1,
-    "key": { "path": ["ResourcePath"] },
-    "readTime": { "timestamp": ["Timestamp"] },
-    "version": { "timestamp": ["Timestamp"] }
-  },
-  "_firestore": {
-    "app": ["FirebaseAppImpl"],
-    "databaseId": ["DatabaseId"],
-    "settings": ["FirestoreSettingsImpl"]
-  },
-  "_firestoreImpl": {
-    "app": ["FirebaseAppImpl"],
-    "databaseId": ["DatabaseId"],
-    "settings": ["FirestoreSettingsImpl"]
-  },
-  "_key": { "path": { "len": 2, "offset": 0, "segments": ["Array"] } },
-  "_userDataWriter": { "firestore": ["Object"] },
-  "metadata": { "fromCache": false, "hasPendingWrites": false }
+  "createdAt": 1726072204751,
+  "fulfilled": false,
+  "items": [
+    {
+      "createdAt": 1726072204751,
+      "createdBy": "Unknown",
+      "lastUpdatedBy": "Unknown",
+      "moved": false,
+      "name": "Apple",
+      "purchased": false,
+      "quantity": 1,
+      "removed": false,
+      "unit": "numbers",
+      "updatedAt": 1726072204751
+    },
+    {
+      "createdAt": 1726072209600,
+      "createdBy": "Unknown",
+      "lastUpdatedBy": "Unknown",
+      "moved": false,
+      "name": "Ball",
+      "purchased": false,
+      "quantity": 1,
+      "removed": false,
+      "unit": "numbers",
+      "updatedAt": 1726072209600
+    },
+    {
+      "createdAt": 1726072209600,
+      "createdBy": "Unknown",
+      "lastUpdatedBy": "Unknown",
+      "moved": false,
+      "name": "Coffee",
+      "purchased": false,
+      "quantity": 1,
+      "removed": false,
+      "unit": "numbers",
+      "updatedAt": 1726072209600
+    },
+    {
+      "createdAt": 1726072209600,
+      "createdBy": "Unknown",
+      "lastUpdatedBy": "Unknown",
+      "moved": false,
+      "name": "Ball",
+      "purchased": true,
+      "quantity": 1,
+      "removed": false,
+      "unit": "numbers",
+      "updatedAt": 1726072209600
+    }
+  ],
+  "lastUpdateBy": "Unknown",
+  "updatedAt": 1726072204751
 }

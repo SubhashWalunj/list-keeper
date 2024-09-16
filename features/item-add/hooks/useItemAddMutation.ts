@@ -2,49 +2,53 @@ import { ListKeys } from "@/constants/Query";
 import List, { ListTypes } from "@/models/list";
 import db from "@/utility/firebase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { produce } from "immer";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+
+const populateItem = (item: Item): Item => ({
+  ...item,
+  createdAt: Date.now(),
+  createdBy: "Unknown", // TODO: Populate with user data
+  lastUpdatedBy: "Unknown",
+  moved: false,
+  removed: false,
+  updatedAt: Date.now(),
+  purchased: false,
+});
 
 const initList = (item: Item): List => ({
   createdAt: Date.now(),
   fulfilled: false,
   lastUpdateBy: "Unknown",
   updatedAt: Date.now(),
-  items: [item],
+  items: [populateItem(item)],
 });
 
 async function addItem(listType: ListTypes, data: Item) {
   const document = listType === "CURRENT" ? "current" : "next";
+  const populatedItem = populateItem(data);
 
-  // Atomically add a new region to the "regions" array field.
   await updateDoc(doc(db, "Lists", document), {
-    items: arrayUnion(data),
+    items: arrayUnion(populatedItem),
   });
 }
 
 function setList(listType: ListTypes, data: List) {
   console.log("setList", data);
   const document = listType === "CURRENT" ? "current" : "next";
-  return setDoc(doc(db, "Lists", "current"), data);
+  return setDoc(doc(db, "Lists", document), data);
   // return new Promise(() => {});
 }
 
 const useItemAddMutation = (type: ListTypes) => {
   const queryClient = useQueryClient();
   const key = type === "CURRENT" ? ListKeys.currentList() : ListKeys.nextList();
-  let isInitList = false;
+  const currentList = queryClient.getQueryData(key);
   return useMutation({
     mutationFn: (item: Item) => {
       console.log("mutationFn", item);
       let listData: List | undefined = queryClient.getQueryData(key);
-      if (isInitList) {
+      console.log("listData", listData);
+      if (!currentList) {
         listData = initList(item);
         return setList(type, listData);
       } else {
@@ -62,7 +66,6 @@ const useItemAddMutation = (type: ListTypes) => {
       const previousList = queryClient.getQueryData(key);
 
       if (!previousList) {
-        isInitList = true;
         const newList = initList(newItem);
         queryClient.setQueryData(key, newList);
       } else {
@@ -78,7 +81,7 @@ const useItemAddMutation = (type: ListTypes) => {
     },
     // If the mutation fails,
     // use the context returned from onMutate to roll back
-    onError: (err, newReport, context) => {
+    onError: (err, newItem, context) => {
       console.log("onError", err);
       queryClient.setQueryData(key, context?.previousList);
     },

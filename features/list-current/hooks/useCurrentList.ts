@@ -2,7 +2,7 @@ import { ListKeys } from "@/constants/Query";
 import List from "@/models/list";
 import db from "@/utility/firebase";
 import { useQuery } from "@tanstack/react-query";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 async function fetchCurrentList(): Promise<List | null> {
   try {

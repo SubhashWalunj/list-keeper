@@ -1,25 +1,50 @@
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { Colors } from "@/constants/Colors";
 import { FileCheck2, FileX2 } from "lucide-react-native";
-import { StyleSheet, useColorScheme } from "react-native";
+import { useCallback, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import useItemCheckMutation from "./hooks/useItemCheckMutation";
+import useShowToast from "@/hooks/useShowToast";
+import Item from "@/models/item";
 
 type ItemCheckProps = {
-  isChecked: boolean;
-  onToggle: (checked: boolean) => void;
+  item: Item;
 };
 
-function ItemCheck({ isChecked }: ItemCheckProps) {
-  let checkButtonStyles = styles.checkButton;
-  const theme = useColorScheme() || "light";
-  /* if (isChecked) {
-    checkButtonStyles = {
-      ...checkButtonStyles,
-      backgroundColor: Colors[theme].primary,
-    };
-  } */
+function ItemCheck({ item }: ItemCheckProps) {
+  const checkButtonStyles = styles.checkButton;
+  const { mutate, isError, isSuccess, isPending } = useItemCheckMutation();
+  const showToast = useShowToast();
+
+  const handleToggle = useCallback(() => {
+    const updatedItem = { ...item, purchased: !item.purchased };
+    mutate(updatedItem);
+  }, [item, mutate]);
+
+  useEffect(() => {
+    if (!isPending) {
+      if (isSuccess) {
+        showToast(
+          "item-check-success",
+          "success",
+          `Item ${item.purchased ? "Checked" : "Unchecked"} :)`
+        );
+        return;
+      }
+      if (isError) {
+        showToast("item-check-error", "error", "Error occurred (-_-)");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPending]);
+
   return (
-    <Button size="lg" style={checkButtonStyles} className="rounded-full p-3.5">
-      <ButtonIcon stroke="black" as={isChecked ? FileX2 : FileCheck2} />
+    <Button
+      size="lg"
+      style={checkButtonStyles}
+      className="rounded-full p-3.5"
+      onPress={handleToggle}
+    >
+      <ButtonIcon stroke="black" as={item.purchased ? FileX2 : FileCheck2} />
     </Button>
   );
 }
