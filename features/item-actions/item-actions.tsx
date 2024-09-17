@@ -6,29 +6,50 @@ import Item from "@/models/item";
 import { useCallback, useEffect, useState } from "react";
 import useItemRemoveMutation from "./hooks/useItemRemoveMutation";
 import useShowToast from "@/hooks/useShowToast";
+import useItemMoveToNextMutation from "./hooks/useItemMoveToNextMutation";
+import { ListTypes } from "@/models/list";
 
 type ItemActionsProps = {
+  listType: ListTypes;
   item: Item;
 };
 
-function ItemActions({ item }: ItemActionsProps) {
-  const [isDisabled, setIsDisabled] = useState(false);
-  const { mutate, isError, isPending, isSuccess } = useItemRemoveMutation();
+function ItemActions({ listType, item }: ItemActionsProps) {
+  const [isRemoveItemDisabled, setIsRemoveItemDisabled] = useState(false);
+  const [isMoveItemDisabled, setIsMoveItemDisabled] = useState(false);
+  const {
+    mutate: itemRemoveMutate,
+    isError: itemRemoveIsError,
+    isPending: itemRemoveIsPending,
+    isSuccess: itemRemoveIsSuccess,
+  } = useItemRemoveMutation(listType);
+  const {
+    mutate: itemMoveMutate,
+    isError: itemMoveIsError,
+    isPending: itemMoveIsPending,
+    isSuccess: itemMoveIsSuccess,
+  } = useItemMoveToNextMutation();
   const showToast = useShowToast();
 
   const handleRemoveItem = useCallback(() => {
-    console.log("Remove item", item);
-    setIsDisabled(true);
-    mutate(item);
-  }, [item, mutate]);
+    setIsRemoveItemDisabled(true);
+    itemRemoveMutate(item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
+
+  const handleMoveToNext = useCallback(() => {
+    setIsMoveItemDisabled(true);
+    itemMoveMutate(item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
   useEffect(() => {
-    if (!isPending) {
-      if (isSuccess) {
+    if (!itemRemoveIsPending) {
+      if (itemRemoveIsSuccess) {
         showToast("item-remove-success", "success", `Item removed :)`);
         return;
       }
-      if (isError) {
+      if (itemRemoveIsError) {
         showToast(
           "item-remove-error",
           "error",
@@ -37,7 +58,24 @@ function ItemActions({ item }: ItemActionsProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPending]);
+  }, [itemRemoveIsPending]);
+
+  useEffect(() => {
+    if (!itemMoveIsPending) {
+      if (itemMoveIsSuccess) {
+        showToast("item-move-success", "success", `Item moved to next list :)`);
+        return;
+      }
+      if (itemMoveIsError) {
+        showToast(
+          "item-move-error",
+          "error",
+          "Error occurred while moving an item (-_-)"
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemMoveIsPending]);
 
   return (
     <Menu
@@ -51,15 +89,22 @@ function ItemActions({ item }: ItemActionsProps) {
         );
       }}
     >
-      <MenuItem key="Move to next" textValue="Move to next">
-        <Icon as={ArrowBigRightDash} size="md" className="mr-2" />
-        <MenuItemLabel size="md">Move to next</MenuItemLabel>
-      </MenuItem>
+      {listType === "current" && (
+        <MenuItem
+          key="Move to next"
+          textValue="Move to next"
+          onPress={handleMoveToNext}
+          disabled={isMoveItemDisabled}
+        >
+          <Icon as={ArrowBigRightDash} size="md" className="mr-2" />
+          <MenuItemLabel size="md">Move to next</MenuItemLabel>
+        </MenuItem>
+      )}
       <MenuItem
         key="Remove"
         textValue="Remove"
         onPress={handleRemoveItem}
-        disabled={isDisabled}
+        disabled={isRemoveItemDisabled}
       >
         <Icon as={ListX} size="md" className="mr-2" />
         <MenuItemLabel size="md">Remove</MenuItemLabel>

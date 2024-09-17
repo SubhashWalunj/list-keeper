@@ -5,12 +5,15 @@ import { ListPlus } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ItemAddModal from "../item-editor-modal/item-editor-modal";
 import useItemAddMutation from "./hooks/useItemAddMutation";
+import { ListTypes } from "@/models/list";
 
-function ItemAdd() {
+type ItemAddProps = { listType: ListTypes };
+
+function ItemAdd({ listType }: ItemAddProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const ref = useRef(null);
   const { mutate, isSuccess, isPending, isError } =
-    useItemAddMutation("CURRENT");
+    useItemAddMutation(listType);
 
   const handleItemAdd = useCallback(
     (item: Item) => {
@@ -37,7 +40,7 @@ function ItemAdd() {
     <>
       <ItemAddModal
         showModal={modalOpen}
-        listType="CURRENT"
+        listType="current"
         editType="NEW"
         closeModal={() => setModalOpen(false)}
         addItem={handleItemAdd}

@@ -8,7 +8,13 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import ItemActions from "../item-actions/item-actions";
 import ItemCheck from "../item-check/item-check";
-import useCurrentListData from "./hooks/useCurrentList";
+import List, { ListTypes } from "@/models/list";
+
+type ListDisplayProps = {
+  listType: ListTypes;
+  listData: List | null | undefined;
+  error: Error | null;
+};
 
 const sortItems = (items: Item[]) =>
   items.sort((a, b) => {
@@ -23,16 +29,16 @@ const sortItems = (items: Item[]) =>
     });
   });
 
-function ListCurrent() {
-  const { error, data } = useCurrentListData();
-
+function ListDisplay({ listType, listData, error }: ListDisplayProps) {
   if (error) {
     console.log(error);
-    return <ThemedText>An Error occurred to fetch the current list</ThemedText>;
+    return (
+      <ThemedText>An Error occurred to fetch the {listType} list</ThemedText>
+    );
   }
 
-  return data && data.items.length ? (
-    sortItems(data.items).map((item, index) => (
+  return listData && listData.items.length ? (
+    sortItems(listData.items).map((item, index) => (
       <React.Fragment key={index}>
         <Card
           size="md"
@@ -41,7 +47,7 @@ function ListCurrent() {
           style={item.purchased && { backgroundColor: "#208b3a" }}
         >
           <View style={styles.itemContainer}>
-            <ItemCheck item={item}></ItemCheck>
+            {listType === "current" && <ItemCheck item={item}></ItemCheck>}
             <ThemedText
               style={{
                 fontWeight: "bold",
@@ -64,7 +70,7 @@ function ListCurrent() {
                 </BadgeText>
               </Badge>
             )}
-            <ItemActions item={item}></ItemActions>
+            <ItemActions listType={listType} item={item}></ItemActions>
           </View>
         </Card>
       </React.Fragment>
@@ -88,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListCurrent;
+export default ListDisplay;

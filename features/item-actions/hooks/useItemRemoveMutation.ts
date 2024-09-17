@@ -1,34 +1,17 @@
 import { ListKeys } from "@/constants/Query";
 import Item from "@/models/item";
-import List from "@/models/list";
-import db from "@/utility/firebase";
+import List, { ListTypes } from "@/models/list";
+import { updateItemsToFirebase } from "@/utility/firebase";
+import { removeItem } from "@/utility/list";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { doc, updateDoc } from "firebase/firestore";
-import { produce } from "immer";
 
-async function updateFirebase(data: Item[]) {
-  await updateDoc(doc(db, "Lists", "current"), {
-    items: data,
-  });
-}
-
-function removeItem(items: Item[], item: Item) {
-  return produce(items, (draft) => {
-    const index = draft.findIndex((i) => i.name === item.name);
-    if (index !== -1) {
-      draft.splice(index, 1);
-    }
-  });
-}
-
-const useItemRemoveMutation = () => {
+const useItemRemoveMutation = (type: ListTypes) => {
   const queryClient = useQueryClient();
-  const key = ListKeys.currentList();
+  const key = type === "current" ? ListKeys.currentList() : ListKeys.nextList();
   return useMutation({
     mutationFn: (item: Item) => {
-      const previousList: List = queryClient.getQueryData(key)!;
-      const itemsToUpdate = removeItem(previousList.items, item);
-      return updateFirebase(itemsToUpdate);
+      const list: List = queryClient.getQueryData(key)!;
+      return updateItemsToFirebase(list.items, type);
     },
     // When mutate is called:
     onMutate: async (item) => {

@@ -1,5 +1,14 @@
+import Item from "@/models/item";
+import List, { ListTypes } from "@/models/list";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { populateItem } from "./list";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -17,5 +26,30 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+
+export async function updateItemsToFirebase(data: Item[], listType: ListTypes) {
+  await updateDoc(doc(db, "Lists", listType), {
+    items: data,
+  });
+}
+
+export function setList(listType: ListTypes, data: List) {
+  return setDoc(doc(db, "Lists", listType), data);
+  // return new Promise(() => {});
+}
+
+export async function addItem(listType: ListTypes, data: Item) {
+  const populatedItem = populateItem(data);
+
+  await updateDoc(doc(db, "Lists", listType), {
+    items: arrayUnion(populatedItem),
+  });
+}
+
+export async function addToArchive(list: List) {
+  await updateDoc(doc(db, "Lists", "archived"), {
+    lists: arrayUnion(list),
+  });
+}
 
 export default db;

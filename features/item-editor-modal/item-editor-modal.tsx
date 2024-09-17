@@ -90,7 +90,7 @@ function ItemAddModal({
         <ModalHeader>
           <Heading size="md" className="text-typography-950">
             Add a item in the{" "}
-            {`${listType === "CURRENT" ? "Current" : "Next"} ` || ""}list
+            {`${listType === "current" ? "Current" : "Next"} ` || ""}list
           </Heading>
           <ModalCloseButton>
             <Icon

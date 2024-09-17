@@ -8,6 +8,6 @@ type List = {
   items: Item[];
 };
 
-export type ListTypes = "CURRENT" | "NEXT";
+export type ListTypes = "current" | "next";
 
 export default List;
