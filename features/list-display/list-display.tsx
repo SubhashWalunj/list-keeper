@@ -8,7 +8,6 @@ import { StyleSheet, View } from "react-native";
 import ItemActions from "../item-actions/item-actions";
 import ItemCheck from "../item-check/item-check";
 import List, { ListTypes } from "@/models/list";
-import { sortItems } from "@/utility/list";
 
 type ListDisplayProps = {
   listType: ListTypes;
@@ -25,7 +24,7 @@ function ListDisplay({ listType, listData, error }: ListDisplayProps) {
   }
 
   return listData && listData.items.length ? (
-    sortItems(listData.items).map((item, index) => (
+    listData.items.map((item, index) => (
       <React.Fragment key={index}>
         <Card
           size="md"

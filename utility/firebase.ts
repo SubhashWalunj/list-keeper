@@ -8,7 +8,6 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { populateItem } from "./list";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -35,15 +34,6 @@ export async function updateItemsToFirebase(data: Item[], listType: ListTypes) {
 
 export function setList(listType: ListTypes, data: List) {
   return setDoc(doc(db, "Lists", listType), data);
-  // return new Promise(() => {});
-}
-
-export async function addItem(listType: ListTypes, data: Item) {
-  const populatedItem = populateItem(data);
-
-  await updateDoc(doc(db, "Lists", listType), {
-    items: arrayUnion(populatedItem),
-  });
 }
 
 export async function addToArchive(list: List) {

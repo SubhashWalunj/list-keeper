@@ -92,7 +92,7 @@ function ItemAddModal({
             Add a item in the{" "}
             {`${listType === "current" ? "Current" : "Next"} ` || ""}list
           </Heading>
-          <ModalCloseButton>
+          <ModalCloseButton onPress={closeModal}>
             <Icon
               as={CloseIcon}
               size="md"

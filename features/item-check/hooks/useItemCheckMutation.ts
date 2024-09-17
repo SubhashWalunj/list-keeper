@@ -2,7 +2,7 @@ import { ListKeys } from "@/constants/Query";
 import Item from "@/models/item";
 import List from "@/models/list";
 import { updateItemsToFirebase } from "@/utility/firebase";
-import { updatedItems } from "@/utility/list";
+import { sortItems, updatedItems } from "@/utility/list";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useItemCheckMutation = () => {
@@ -28,7 +28,7 @@ const useItemCheckMutation = () => {
       // Optimistically update to the new value
       queryClient.setQueryData(key, (old: List) => ({
         ...old,
-        items: itemsToUpdate,
+        items: sortItems(itemsToUpdate),
       }));
 
       // Return a context object with the snapshot value

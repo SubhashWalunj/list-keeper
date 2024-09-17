@@ -25,9 +25,11 @@ export function initList(item?: Item): List {
 }
 
 export function updatedItems(items: Item[], item: Item) {
-  return produce(items, (draft) => {
-    const index = draft.findIndex((i) => i.name === item.name);
-    draft[index] = item;
+  return items.map((i) => {
+    if (i.name === item.name) {
+      return item;
+    }
+    return i;
   });
 }
 

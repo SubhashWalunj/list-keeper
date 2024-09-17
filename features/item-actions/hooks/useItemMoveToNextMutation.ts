@@ -1,8 +1,13 @@
 import { ListKeys } from "@/constants/Query";
 import Item from "@/models/item";
 import List from "@/models/list";
-import { addItem, setList, updateItemsToFirebase } from "@/utility/firebase";
-import { initList, removeItem } from "@/utility/list";
+import { setList, updateItemsToFirebase } from "@/utility/firebase";
+import {
+  filterUniqueItemsByName,
+  initList,
+  removeItem,
+  sortItems,
+} from "@/utility/list";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useItemMoveToNextMutation = () => {
@@ -22,7 +27,7 @@ const useItemMoveToNextMutation = () => {
       if (!nextList && listData) {
         return setList("next", listData);
       } else {
-        return addItem("next", item);
+        return updateItemsToFirebase(listData!.items, "next");
       }
     },
     // When mutate is called:
@@ -56,7 +61,7 @@ const useItemMoveToNextMutation = () => {
         // Optimistically update to the new value
         queryClient.setQueryData(ListKeys.nextList(), (old: List) => ({
           ...old,
-          items: [...old.items, item],
+          items: sortItems(filterUniqueItemsByName([item, ...old.items])),
         }));
       }
 

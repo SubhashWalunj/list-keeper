@@ -1,8 +1,13 @@
 import { ListKeys } from "@/constants/Query";
 import Item from "@/models/item";
 import List, { ListTypes } from "@/models/list";
-import { addItem, setList } from "@/utility/firebase";
-import { initList } from "@/utility/list";
+import { setList, updateItemsToFirebase } from "@/utility/firebase";
+import {
+  filterUniqueItemsByName,
+  initList,
+  populateItem,
+  sortItems,
+} from "@/utility/list";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useItemAddMutation = (type: ListTypes) => {
@@ -10,12 +15,12 @@ const useItemAddMutation = (type: ListTypes) => {
   const key = type === "current" ? ListKeys.currentList() : ListKeys.nextList();
   const list = queryClient.getQueryData(key);
   return useMutation({
-    mutationFn: (item: Item) => {
+    mutationFn: (_: Item) => {
       const listData: List | undefined = queryClient.getQueryData(key);
       if (!list && listData) {
         return setList(type, listData);
       } else {
-        return addItem(type, item);
+        return updateItemsToFirebase(listData!.items, type);
       }
     },
     // When mutate is called:
@@ -34,7 +39,9 @@ const useItemAddMutation = (type: ListTypes) => {
         // Optimistically update to the new value
         queryClient.setQueryData(key, (old: List) => ({
           ...old,
-          items: [...old.items, newItem],
+          items: sortItems(
+            filterUniqueItemsByName([populateItem(newItem), ...old.items])
+          ),
         }));
       }
 

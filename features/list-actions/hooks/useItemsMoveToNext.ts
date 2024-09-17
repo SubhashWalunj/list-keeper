@@ -1,7 +1,7 @@
 import { ListKeys } from "@/constants/Query";
 import List from "@/models/list";
 import { addToArchive, updateItemsToFirebase } from "@/utility/firebase";
-import { filterUniqueItemsByName, initList } from "@/utility/list";
+import { filterUniqueItemsByName, initList, sortItems } from "@/utility/list";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useItemsMoveToNext = () => {
@@ -37,10 +37,9 @@ const useItemsMoveToNext = () => {
 
       const nextListItems = nextList?.items || [];
 
-      const newCurrentListItems = filterUniqueItemsByName([
-        ...nextListItems,
-        ...nonPurchasedItems,
-      ]);
+      const newCurrentListItems = sortItems(
+        filterUniqueItemsByName([...nonPurchasedItems, ...nextListItems])
+      );
 
       // update current list to next items plus non-purchased items
       queryClient.setQueryData(ListKeys.currentList(), (old: List) => ({
