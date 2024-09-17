@@ -10,6 +10,7 @@ const useItemMoveToNextMutation = () => {
   const nextList: List = queryClient.getQueryData(ListKeys.nextList())!;
   return useMutation({
     mutationFn: async (item: Item) => {
+      item.purchased = false;
       const currentList: List = queryClient.getQueryData(
         ListKeys.currentList()
       )!;
@@ -26,6 +27,7 @@ const useItemMoveToNextMutation = () => {
     },
     // When mutate is called:
     onMutate: async (item) => {
+      item.purchased = false;
       // Cancel any outgoing refetch
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: ListKeys.currentList() });

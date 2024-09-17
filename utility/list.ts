@@ -48,3 +48,16 @@ export function filterUniqueItemsByName(items: Item[]): Item[] {
     return !duplicate;
   });
 }
+
+export const sortItems = (items: Item[]) =>
+  items.sort((a, b) => {
+    // Sort purchased: false on top
+    if (a.purchased !== b.purchased) {
+      return a.purchased ? 1 : -1;
+    }
+    // If both are either purchased: true or purchased: false, sort by name
+    return a.name.localeCompare(b.name, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });

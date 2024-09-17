@@ -2,32 +2,19 @@ import { ThemedText } from "@/components/ThemedText";
 import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import Item from "@/models/item";
 import { InfoIcon } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import ItemActions from "../item-actions/item-actions";
 import ItemCheck from "../item-check/item-check";
 import List, { ListTypes } from "@/models/list";
+import { sortItems } from "@/utility/list";
 
 type ListDisplayProps = {
   listType: ListTypes;
   listData: List | null | undefined;
   error: Error | null;
 };
-
-const sortItems = (items: Item[]) =>
-  items.sort((a, b) => {
-    // Sort purchased: false on top
-    if (a.purchased !== b.purchased) {
-      return a.purchased ? 1 : -1;
-    }
-    // If both are either purchased: true or purchased: false, sort by name
-    return a.name.localeCompare(b.name, undefined, {
-      numeric: true,
-      sensitivity: "base",
-    });
-  });
 
 function ListDisplay({ listType, listData, error }: ListDisplayProps) {
   if (error) {
@@ -76,7 +63,7 @@ function ListDisplay({ listType, listData, error }: ListDisplayProps) {
       </React.Fragment>
     ))
   ) : (
-    <Alert action="info" variant="solid">
+    <Alert action="info" variant="solid" style={{ marginTop: 10 }}>
       <AlertIcon stroke="black" as={InfoIcon} />
       <AlertText>
         There is no item present in the list. Use Add Item button to add new

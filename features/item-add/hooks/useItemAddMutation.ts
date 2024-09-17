@@ -49,7 +49,6 @@ const useItemAddMutation = (type: ListTypes) => {
     },
     // Always refetch after error or success:
     onSettled: () => {
-      console.log("onSettled");
       queryClient.invalidateQueries({ queryKey: key });
     },
   });
