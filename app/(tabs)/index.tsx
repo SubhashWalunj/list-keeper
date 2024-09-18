@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
 import ItemAdd from "@/features/item-add/item-add";
-import { Colors } from "@/constants/Colors";
+import Colors from "@/constants/Colors";
 import useCurrentListData from "@/hooks/useCurrentList";
 import ListDisplay from "@/features/list-display/list-display";
 import Header from "@/components/Header";

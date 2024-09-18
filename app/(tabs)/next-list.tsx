@@ -2,7 +2,7 @@ import { StyleSheet, Image, Platform } from "react-native";
 
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
+import Colors from "@/constants/Colors";
 import ItemAdd from "@/features/item-add/item-add";
 import ListDisplay from "@/features/list-display/list-display";
 import useNextListData from "@/hooks/useNextList";

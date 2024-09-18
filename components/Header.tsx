@@ -1,7 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { HelloWave } from "./HelloWave";
-import { Colors } from "@/constants/Colors";
+import Colors from "@/constants/Colors";
 import { PropsWithChildren } from "react";
 
 const Header = ({ children }: PropsWithChildren) => (
